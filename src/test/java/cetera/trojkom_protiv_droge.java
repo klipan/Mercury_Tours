@@ -9,8 +9,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+import elements.*;
 
-import java.sql.Driver;
 import java.util.concurrent.TimeUnit;
 
 public class trojkom_protiv_droge {
@@ -27,81 +27,81 @@ public class trojkom_protiv_droge {
 
     @Test
     public void test() {
-        driver.get("http://newtours.demoaut.com/");
+        driver.get(Login.baseURL);
         Assert.assertEquals(driver.getTitle(), "Welcome: Mercury Tours");
-        driver.findElement(By.xpath("//*[@alt='Sign-In']")).click();
-        driver.findElement(By.xpath("//*/td[2]/table//p/font/a[@href='mercuryregister.php']")).click();
-        driver.findElement(By.cssSelector("[name='email']")).sendKeys("reci_ne_drogama");
-        driver.findElement(By.cssSelector("[name='password']")).sendKeys("trojka");
-        driver.findElement(By.cssSelector("[name='confirmPassword']")).sendKeys("trojka");
-        driver.findElement(By.cssSelector("[type='image']")).click();
-        driver.findElement(By.xpath("//*/a[@href='mercurysignon.php']")).click();
-        driver.findElement(By.cssSelector("[name=userName]")).sendKeys("reci_ne_drogama");
-        driver.findElement(By.cssSelector("[name=password]")).sendKeys("trojka");
-        driver.findElement(By.cssSelector("[type='image']")).click();
+        driver.findElement(By.xpath(Login.signOn)).click();
+        driver.findElement(By.xpath(Login.regForm)).click();
+        driver.findElement(By.cssSelector(Login.signOnUserName)).sendKeys(BaseHelper.username);
+        driver.findElement(By.cssSelector(Login.signOnPassword)).sendKeys(BaseHelper.password);
+        driver.findElement(By.cssSelector(Login.confirmPass)).sendKeys(BaseHelper.password);
+        driver.findElement(By.cssSelector(Login.submit)).click();
+        driver.findElement(By.xpath(Login.signIn)).click();
+        driver.findElement(By.cssSelector(Login.username)).sendKeys(BaseHelper.username);
+        driver.findElement(By.cssSelector(Login.password)).sendKeys(BaseHelper.password);
+        driver.findElement(By.cssSelector(Login.submit)).click();
         Assert.assertTrue(driver.getTitle().equals("Find a Flight: Mercury Tours:"));
 
-        Select passangers = new Select(driver.findElement(By.cssSelector("[name=passCount]")));
-        passangers.selectByVisibleText("2");
-        Assert.assertEquals("2 ", passangers.getFirstSelectedOption().getText());
+        Select passangers = new Select(driver.findElement(By.cssSelector(FlightFinder.passengers)));
+        passangers.selectByVisibleText(FlightFinder.numOfPass);
+        Assert.assertEquals(FlightFinder.numOfPass, passangers.getFirstSelectedOption().getText());
 
-        Select departing = new Select(driver.findElement(By.cssSelector("[name=fromPort]")));
-        departing.selectByVisibleText("Zurich");
-        Assert.assertEquals("Zurich", departing.getFirstSelectedOption().getText());
+        Select departing = new Select(driver.findElement(By.cssSelector(FlightFinder.departing)));
+        departing.selectByVisibleText(FlightFinder.depCity);
+        Assert.assertEquals(FlightFinder.depCity, departing.getFirstSelectedOption().getText());
 
-        Select dep_month = new Select(driver.findElement(By.cssSelector("[name=fromMonth]")));
-        dep_month.selectByVisibleText("September");
-        Assert.assertEquals("September", dep_month.getFirstSelectedOption().getText());
+        Select dep_month = new Select(driver.findElement(By.cssSelector(FlightFinder.dep_month)));
+        dep_month.selectByVisibleText(FlightFinder.depMonth);
+        Assert.assertEquals(FlightFinder.depMonth, dep_month.getFirstSelectedOption().getText());
 
-        Select dep_date = new Select(driver.findElement(By.cssSelector("[name=fromDay]")));
-        dep_date.selectByVisibleText("15");
-        Assert.assertEquals("15", dep_date.getFirstSelectedOption().getText());
+        Select dep_date = new Select(driver.findElement(By.cssSelector(FlightFinder.dep_date)));
+        dep_date.selectByVisibleText(FlightFinder.depDay);
+        Assert.assertEquals(FlightFinder.depDay, dep_date.getFirstSelectedOption().getText());
 
-        Select arrival = new Select(driver.findElement(By.cssSelector("[name=toPort]")));
-        arrival.selectByVisibleText("San Francisco");
-        Assert.assertEquals("San Francisco", arrival.getFirstSelectedOption().getText());
+        Select arrival = new Select(driver.findElement(By.cssSelector(FlightFinder.arrival)));
+        arrival.selectByVisibleText(FlightFinder.depToCity);
+        Assert.assertEquals(FlightFinder.depToCity, arrival.getFirstSelectedOption().getText());
 
-        Select ret_month = new Select(driver.findElement(By.cssSelector("[name=toMonth]")));
-        ret_month.selectByVisibleText("December");
-        Assert.assertEquals("December", ret_month.getFirstSelectedOption().getText());
+        Select ret_month = new Select(driver.findElement(By.cssSelector(FlightFinder.ret_month)));
+        ret_month.selectByVisibleText(FlightFinder.returnMonth);
+        Assert.assertEquals(FlightFinder.returnMonth, ret_month.getFirstSelectedOption().getText());
 
-        Select ret_date = new Select(driver.findElement(By.cssSelector("[name=toDay]")));
-        ret_date.selectByVisibleText("18");
-        Assert.assertEquals("18", ret_date.getFirstSelectedOption().getText());
+        Select ret_date = new Select(driver.findElement(By.cssSelector(FlightFinder.ret_date)));
+        ret_date.selectByVisibleText(FlightFinder.returnDay);
+        Assert.assertEquals(FlightFinder.returnDay, ret_date.getFirstSelectedOption().getText());
 
-        WebElement plane_class = driver.findElement(By.cssSelector("[value=First]"));
+        WebElement plane_class = driver.findElement(By.cssSelector(FlightFinder.firstClass));
         plane_class.click();
         Assert.assertTrue(plane_class.isSelected());
 
-        Select airline = new Select(driver.findElement(By.cssSelector("[name=airline]")));
-        airline.selectByVisibleText("Blue Skies Airlines");
-        Assert.assertEquals("Blue Skies Airlines", airline.getFirstSelectedOption().getText());
+        Select airline = new Select(driver.findElement(By.cssSelector(FlightFinder.airline)));
+        airline.selectByVisibleText(FlightFinder.airlineName);
+        Assert.assertEquals(FlightFinder.airlineName, airline.getFirstSelectedOption().getText());
 
-        driver.findElement(By.cssSelector("[type=image]")).click();
+        driver.findElement(By.cssSelector(Login.submit)).click();
         Assert.assertTrue(driver.getTitle().equals("Select a Flight: Mercury Tours"));
 
-        WebElement dep_flight = driver.findElement(By.xpath("//*[contains(@value,'361')]"));
+        WebElement dep_flight = driver.findElement(By.xpath(SelectFlightAndPassangers.dep_flight));
         dep_flight.click();
         Assert.assertTrue(dep_flight.isSelected());
 
-        WebElement ret_flight = driver.findElement(By.xpath("//*[contains(@value,'631')]"));
+        WebElement ret_flight = driver.findElement(By.xpath(SelectFlightAndPassangers.ret_flight));
         ret_flight.click();
         Assert.assertTrue(ret_flight.isSelected());
 
-        driver.findElement(By.cssSelector("[type=image]")).click();
+        driver.findElement(By.cssSelector(Login.submit)).click();
         Assert.assertTrue(driver.getTitle().equals("Book a Flight: Mercury Tours"));
 
-        driver.findElement(By.cssSelector("[name=passFirst0]")).sendKeys("Lazar");
-        driver.findElement(By.cssSelector("[name=passLast0]")).sendKeys("Raskovic");
-        driver.findElement(By.cssSelector("[name=creditnumber]")).sendKeys("001234567");
-        driver.findElement(By.cssSelector("[name=passFirst1]")).sendKeys("Nikola");
-        driver.findElement(By.cssSelector("[name=passLast1]")).sendKeys("Klipa");
-        driver.findElement(By.cssSelector("[type=image]")).click();
+        driver.findElement(By.cssSelector(SelectFlightAndPassangers.passanger1)).sendKeys(SelectFlightAndPassangers.passanger1Name);
+        driver.findElement(By.cssSelector(SelectFlightAndPassangers.pass1LastName)).sendKeys(SelectFlightAndPassangers.LastName1);
+        driver.findElement(By.cssSelector(SelectFlightAndPassangers.creditCard)).sendKeys(SelectFlightAndPassangers.creditCardNum);
+        driver.findElement(By.cssSelector(SelectFlightAndPassangers.passanger2)).sendKeys(SelectFlightAndPassangers.passanger2Name);
+        driver.findElement(By.cssSelector(SelectFlightAndPassangers.pass2LastName)).sendKeys(SelectFlightAndPassangers.LastName2);
+        driver.findElement(By.cssSelector(Login.submit)).click();
 
         Assert.assertTrue(driver.getTitle().equals("Flight Confirmation: Mercury Tours"));
-        Assert.assertTrue((driver.findElement(By.cssSelector("[size=\"\\+1\"]")).getText()).equals("Your itinerary has been booked!"));
+        Assert.assertTrue((driver.findElement(By.cssSelector(SelectFlightAndPassangers.title)).getText()).equals("Your itinerary has been booked!"));
 
-        driver.findElement(By.xpath("//*/img[@src='/images/forms/Logout.gif']")).click();
+        driver.findElement(By.xpath(SelectFlightAndPassangers.LogOut)).click();
         driver.quit();
 
     }
